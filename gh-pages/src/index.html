@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated SVG & Custom Progress Bar</title>
+    <link type="image/webp" sizes="16x16" rel="icon" href="public/favicon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mozilla+Text:wght@200..700&family=Rubik+Maze&display=swap">
+    <link rel="stylesheet" href="css/bin/style.min.css" inline>
+    <script type="module" src="js/component/fttl-progress-bar.min.js" is="component"></script>
+    <script type="module" src="js/main.js" inline></script>
+    <meta name="description" content="SVG animation with CSS and jQuery. Custom progress bar component with Vanilla JavaScript.">
+    <meta property="og:url" content="https://sangafabrice.github.io/fttl-progress-bar/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Animated SVG & Custom Progress Bar">
+    <meta property="og:description" content="SVG animation with CSS and jQuery. Custom progress bar component with Vanilla JavaScript.">
+    <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgMCqcMverxK_Gju82yhzS10BNkwYDEdoPUNZ2y_EA-WkHFFECPrr7yf-rZ2AYYwXU1F8WmwQd2IxpXW53z0-JkZJMBqzN8GMIaudf6zOI1cRJWe9zZQ-UVQrkhRCE5MU7hqQukPjVywRcH8-7FNj74zu8XcZabmmIclnqhIClIc9UN1m7_v8PW3SjpTmax/s1600/svg-animation-thumbnail.webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="sangafabrice.github.io">
+    <meta property="twitter:url" content="https://sangafabrice.github.io/fttl-progress-bar/">
+    <meta name="twitter:title" content="Animated SVG & Custom Progress Bar">
+    <meta name="twitter:description" content="SVG animation with CSS and jQuery. Custom progress bar component with Vanilla JavaScript.">
+    <meta name="twitter:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgMCqcMverxK_Gju82yhzS10BNkwYDEdoPUNZ2y_EA-WkHFFECPrr7yf-rZ2AYYwXU1F8WmwQd2IxpXW53z0-JkZJMBqzN8GMIaudf6zOI1cRJWe9zZQ-UVQrkhRCE5MU7hqQukPjVywRcH8-7FNj74zu8XcZabmmIclnqhIClIc9UN1m7_v8PW3SjpTmax/s1600/svg-animation-thumbnail.webp">
+</head>
+<body>
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgMCqcMverxK_Gju82yhzS10BNkwYDEdoPUNZ2y_EA-WkHFFECPrr7yf-rZ2AYYwXU1F8WmwQd2IxpXW53z0-JkZJMBqzN8GMIaudf6zOI1cRJWe9zZQ-UVQrkhRCE5MU7hqQukPjVywRcH8-7FNj74zu8XcZabmmIclnqhIClIc9UN1m7_v8PW3SjpTmax/s1600/svg-animation-thumbnail.webp" alt="Animated SVG & Custom Progress Bar">
+    <div class="card">
+        <div class="content">
+            <svg is="hero" data-src="html/hero.svg"></svg>
+            <div class="current-time">
+                <time datetime="PT3M0S" data-loaded="3:00" hidden>0:00</time>
+            </div>
+        </div>
+        <fttl-progress-bar value="0" buffer="0"></fttl-progress-bar>
+    </div>
+    <div is="background" data-src="html/background.html"></div>
+    <script src="/bower_components/jquery/dist/jquery.min.js" is="jquery"></script>
+</body>
+</html>

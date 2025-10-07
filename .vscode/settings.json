@@ -1,0 +1,9 @@
+{
+    "prettier.arrowParens": "avoid",
+    "files.autoSave": "afterDelay",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "prettier.tabWidth": 4,
+    "liveServer.settings.root": "/public"
+    // "liveServer.settings.root": "/gh-pages"
+}

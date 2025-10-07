@@ -1,0 +1,17 @@
+{
+  "name": "fttl-progress-bar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "setup.js",
+  "scripts": {
+    "build:app": "npm run build --prefix app",
+    "watch:app": "npm start --prefix app",
+    "watch:public": "npm start --prefix gh-pages",
+    "watch": "node watch",
+    "setup": "node setup"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}

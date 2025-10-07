@@ -1,0 +1,54 @@
+@keyframes animate {
+    0%{
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0;
+    }
+
+    100%{
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 50%;
+    }
+}
+
+@define-mixin circle $rank, $left, $diameter: 30px, $duration: 25s, $delay: 0s {
+    &:nth-child($rank){
+        animation-delay: $delay;
+        animation-duration: $duration;
+        left: $left;
+        width: $diameter;
+    }
+}
+
+.background{
+    position: absolute;
+    inset: 0;
+    z-index: -1;    
+}
+
+.circles{
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+
+    >li{
+        aspect-ratio: 1;
+        position: absolute;
+        list-style: none;
+        background: #ffffffb3;
+        animation: animate linear infinite;
+        bottom: -150px;
+        
+        @mixin circle 1, 25%, 80px;
+        @mixin circle 2, 10%, , 12s, 2s;
+        @mixin circle 3, 70%, , , 4s;
+        @mixin circle 4, 40%, 60px, 18s;
+        @mixin circle 5, 65%;
+        @mixin circle 6, 75%, 110px, , 3s;
+        @mixin circle 7, 35%, 150px, , 7s;
+        @mixin circle 8, 50%, 35px, 45s, 15s;
+        @mixin circle 9, 20%, 25px, 35s, 2s;
+        @mixin circle 10, 85%, 150px, 11s;
+    }
+}

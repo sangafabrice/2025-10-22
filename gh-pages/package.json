@@ -1,0 +1,39 @@
+{
+  "name": "gh-pages",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js/main.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "nodemonConfig": {
+    "exec": "node build",
+    "watch": "src",
+    "ignore": [
+      "src/**/bin/*.*",
+      "src/**/public/**/*.*"
+    ],
+    "ext": "js,html,css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/jquery": "^3.5.33",
+    "bower": "^1.8.14",
+    "cheerio": "^1.1.2",
+    "cssnano": "^7.1.1",
+    "html-minifier-terser": "^7.2.0",
+    "inline-source": "^8.0.3",
+    "inline-source-cli": "^2.0.0",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-import": "^16.1.1",
+    "postcss-mixins": "^12.1.2",
+    "postcss-preset-env": "^10.4.0",
+    "rollup": "^4.52.4"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "custom-progress-bar",
+  "description": "Custom progress bar showcase.",
+  "main": "script.js",
+  "authors": [
+    "sangafabrice"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true
+}

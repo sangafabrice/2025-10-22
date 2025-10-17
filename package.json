@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "src/fttl-progress-bar.js",
   "scripts": {
-    "build": "rollup --config"
+    "build": "node build",
+    "build:js": "rollup --config",
+    "watch": "node --watch-path=src build"
   },
   "keywords": [],
   "author": "Fabrice Sanga",

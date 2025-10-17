@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node build",
     "build:js": "rollup --config",
-    "watch": "node --watch-path=src build"
+    "build:css": "cd src/templates/assets&& postcss *.css --dir bin --ext min.css",
+    "watch": "node --watch-path=src/fttl-progress-bar.js --watch-path=src/templates/progressBar.css.js --watch-path=src/templates/progressBar.event.js --watch-path=src/templates/assets/shadow.css --watch-path=src/utils build"
   },
   "keywords": [],
   "author": "Fabrice Sanga",

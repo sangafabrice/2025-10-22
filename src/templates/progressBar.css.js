@@ -1,5 +1,5 @@
 import ShadowCSS from "../utils/shadowCSS.util.js";
-import shadowCssText from "./assets/shadow.css";
+import shadowCssText from "./assets/bin/shadow.min.css";
 
 const VALUE_CSS_VAR = "--value-rate";
 const BUFFER_CSS_VAR = "--buffer-rate";

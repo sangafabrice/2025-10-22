@@ -1,0 +1,23 @@
+{
+  "name": "fttl-yt-player",
+  "version": "1.0.0",
+  "main": "src/fttl-yt-player.js",
+  "type": "module",
+  "scripts": {
+    "build:js": "rollup --config build/rollup.config.js",
+    "build:css": "postcss **/*.css !**/*.min.css --dir . --base . --ext min.css --use postcss-preset-env --use cssnano --no-map",
+    "build:html": "htmlhint src --config build/.htmlhintrc --ignore **/*.min.* && npm run build:html_player && npm run build:html_thumb",
+    "build:html_player": "cd src/templates/player/assets&& html-minifier-terser template.html --output template.min.html --collapse-whitespace",
+    "build:html_thumb": "cd src/templates/thumbnail/assets&& html-minifier-terser template.html --output template.min.html --collapse-whitespace",
+    "watch": "nodemon --watch src/**/* --ignore *.min.* --ext js,html,css,svg --exec \"npm run build:css && npm run build:html && npm run build:js\"",
+    "compress:svg": "cd src/templates&& svgo --input player/assets thumbnail/assets --multipass"
+  },
+  "keywords": [],
+  "author": "Fabrice Sanga",
+  "license": "ISC",
+  "description": "YouTube play on hover web component",
+  "workspaces": [ "build/" ],
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

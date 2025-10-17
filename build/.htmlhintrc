@@ -1,0 +1,11 @@
+{
+    "attr-lowercase": true,
+    "attr-no-duplication": true,
+    "attr-no-unnecessary-whitespace": true,
+    "attr-whitespace": true,
+    "button-type-require": true,
+    "tag-no-obsolete": true,
+    "tag-pair": true,
+    "tag-self-close": true,
+    "tagname-lowercase": true
+}

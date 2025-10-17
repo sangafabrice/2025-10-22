@@ -1,0 +1,16 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/.htmlhintrc",
+                "/htmlhint.json"
+             ],
+            "url": "./.vscode/htmlhint.schema.json"
+        },
+        {
+            "fileMatch": [ "/package.json" ],
+            "url": "./.vscode/package.schema.json"
+        }
+    ],
+    "json.schemaDownload.enable": false
+}

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { exec, execSync } from "child_process";
 
 /\.css$/i.test(process.argv[2] ?? ".css") &&

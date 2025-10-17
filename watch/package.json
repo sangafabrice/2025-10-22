@@ -1,0 +1,14 @@
+{
+  "name": "wc-build",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "watch": "index.js"
+  },
+  "scripts": {},
+  "keywords": [],
+  "author": "Fabrice Sanga",
+  "license": "ISC",
+  "description": "Native fswatch-based watcher"
+}

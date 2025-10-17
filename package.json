@@ -4,22 +4,15 @@
   "main": "src/fttl-progress-bar.js",
   "type": "module",
   "scripts": {
-    "build": "node build",
+    "build": "build",
     "build:js": "rollup --config build/rollup.config.js",
     "build:css": "cd src/templates/assets&& postcss *.css --dir bin --ext min.css --config ../../../build",
-    "watch": "node watch --root=src --ignore=bin/ build"
+    "watch": "watch --root=src --ignore=bin/ build",
+    "node": "node"
   },
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",
   "description": "Progress bar web component",
-  "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
-    "cssnano": "^7.1.1",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "postcss-preset-env": "^10.4.0",
-    "rollup": "^4.50.0",
-    "rollup-plugin-string": "^3.0.0"
-  }
+  "workspaces": [ "build/", "watch/" ]
 }

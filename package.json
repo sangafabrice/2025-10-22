@@ -1,0 +1,27 @@
+{
+  "name": "fttl-yt-thumb",
+  "version": "1.0.0",
+  "main": "src/fttl-yt-thumb.js",
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:css && npm run build:html && npm run build:svg && npm run build:js",
+    "build:js": "rollup --config build/rollup.config.js",
+    "build:css": "cd src/templates/assets&& postcss *.css --dir bin --ext min.css --use postcss-preset-env --use cssnano --no-map",
+    "build:html": "cd src/templates/assets&& (dir bin > nul 2>&1 || mkdir bin)&& html-minifier-terser template.html --output bin/template.min.html --collapse-whitespace",
+    "build:svg": "cd src/templates/assets&& (dir bin > nul 2>&1 || mkdir bin)&& svgo --input yt-play-icon.svg --output bin/yt-play-icon.min.svg --multipass"
+  },
+  "keywords": [],
+  "author": "Fabrice Sanga",
+  "license": "ISC",
+  "description": "YouTube thumbnaiil web component",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "cssnano": "^7.1.1",
+    "html-minifier-terser": "^7.2.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-preset-env": "^10.4.0",
+    "rollup": "^4.50.0",
+    "rollup-plugin-string": "^3.0.0"
+  }
+}

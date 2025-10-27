@@ -4,8 +4,16 @@
   "main": "src/fttl-yt-player.js",
   "type": "module",
   "scripts": {
-    "dl:schema": "npm run dl --prefix .vscode",
     "watch": "nodemon"
+  },
+  "nodemonConfig": {
+    "events": {
+      "restart": "node --eval=\"console.log(require('process').env.FILENAME)\""
+    },
+    "exec": "npm run build --workspaces",
+    "ext": "*",
+    "ignore": "*.min.*",
+    "watch": "src"
   },
   "keywords": [],
   "author": "Fabrice Sanga",

@@ -4,22 +4,22 @@
   "main": "src/fttl-yt-player.js",
   "type": "module",
   "scripts": {
-    "watch": "nodemon"
+    "watch": "npm run build --workspaces --if-present && nodemon"
   },
   "nodemonConfig": {
     "events": {
-      "restart": "node --eval=\"console.log(require('process').env.FILENAME)\""
+      "restart": "npm run build --workspace=build"
     },
-    "exec": "npm run build --workspaces",
+    "exec": "node -e \"\"",
     "ext": "*",
-    "ignore": "*.min.*",
+    "ignore": "bin/",
     "watch": "src"
   },
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",
   "description": "YouTube play on hover web component",
-  "workspaces": [ "build/" ],
+  "workspaces": [ "build/", "minify/" ],
   "devDependencies": {
     "nodemon": "^3.1.10"
   }

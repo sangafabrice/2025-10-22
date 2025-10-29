@@ -1,7 +1,7 @@
 import { mapDOM } from "./thumbnail.dom.js";
 import getThumbnailUrl from "../../utils/thumbUrl.util.js";
 import Resolution from "../../utils/resolution.util.js";
-import shadowCssText from "./assets/shadow.min.css";
+import shadowCssText from "./assets/bin/shadow.min.css";
 
 const THUMBNAIL_URL_CSS_VAR_PREFIX = "--yt-thumbnail-url-";
 

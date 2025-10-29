@@ -1,7 +1,10 @@
 {
     "json.schemas": [
         {
-            "fileMatch": [ "/.htmlhintrc" ],
+            "fileMatch": [
+                "/.htmlhintrc",
+                "/htmlhint.json"
+             ],
             "url": "./.vscode/htmlhint.schema.json"
         },
         {

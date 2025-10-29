@@ -1,6 +1,6 @@
 import ShadowDOMMap from "../../utils/domMap.util.js";
 import parseHTML from "../../utils/parseHTML.util.js";
-import shadowDOMHtml from "./assets/template.min.html";
+import shadowDOMHtml from "./assets/bin/template.min.html";
 import playButtonImage from "./assets/yt-play-icon.svg";
 
 const shadowDOM = parseHTML(shadowDOMHtml);

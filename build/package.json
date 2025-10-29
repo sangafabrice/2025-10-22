@@ -5,12 +5,7 @@
   "type": "module",
   "bin": "index.js",
   "scripts": {
-    "build": "npm run build:css && npm run build:html && npm run build:js",
-    "build:js": "rollup --config",
-    "build:css": "cd ..&& postcss **/*.css !**/*.min.css --dir . --base . --ext min.css --use postcss-preset-env --use cssnano --no-map",
-    "build:html": "htmlhint ../src --ignore **/*.min.* && npm run build:html_player && npm run build:html_thumb",
-    "build:html_player": "cd ../src/templates/player/assets&& html-minifier-terser template.html --output template.min.html --collapse-whitespace",
-    "build:html_thumb": "cd ../src/templates/thumbnail/assets&& html-minifier-terser template.html --output template.min.html --collapse-whitespace"
+    "build": "rollup --config"
   },
   "keywords": [],
   "author": "Fabrice Sanga",
@@ -18,12 +13,6 @@
   "description": "Build command-line approach",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
-    "cssnano": "^7.1.1",
-    "html-minifier-terser": "^7.2.0",
-    "htmlhint": "^1.7.1",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "postcss-preset-env": "^10.4.0",
     "rollup": "^4.50.0",
     "rollup-plugin-string": "^3.0.0"
   }

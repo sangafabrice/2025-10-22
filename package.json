@@ -4,11 +4,11 @@
   "main": "src/fttl-yt-player.js",
   "type": "module",
   "scripts": {
-    "watch": "npm run watch --workspace=build"
+    "watch": "watch --root src --ignore bin/ \"!**/*.{css,html}\" build"
   },
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",
   "description": "YouTube play on hover web component",
-  "workspaces": [ "build", "minhtml" ]
+  "workspaces": [ "build", "watch", "watch/minify" ]
 }

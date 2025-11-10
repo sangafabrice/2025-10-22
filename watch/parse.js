@@ -1,28 +1,19 @@
-/**
- * @fileoverview
- * Parse the command-line arguments to extract named parameters:
- * --root=<directory>     => root directory to watch
- * --ignore=<pattern>     => file/directory patterns to ignore
- * --delay=<milliseconds> => time delay before triggering restart
- * <script>               => the script to execute
- */
+import parseConfig from "./utils/parse_config.js";
+import transformConfig from "./utils/transform_config.js";
 import parseScript from "./utils/parse_script.js";
 import transformIgnore from "./utils/transform_ignore.js";
-import path from "path";
 import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 
 const DELAY_DEFAULT = 500;
-const script = parseScript(process.argv.pop());
-const namedArgv = yargs(hideBin(process.argv))
+const { config, ignore, delay, execute: script } = yargs(process.argv.slice(2))
     .scriptName("watch")
-    .option("root", {
-        alias: "r",
+    .option("config", {
+        alias: "c",
         type: "string",
         nargs: 1,
         normalize: true,
         default: ".",
-        coerce: path.relative.bind(path, ".")
+        coerce: parseConfig
     })
     .option("delay", {
         alias: "t",
@@ -35,11 +26,16 @@ const namedArgv = yargs(hideBin(process.argv))
         alias: "x",
         array: true,
         string: true,
-        default: []
+        default: [],
+        coerce: transformIgnore
+    })
+    .option("execute", {
+        alias: "e",
+        type: "string",
+        nargs: 1,
+        normalize: true,
+        coerce: parseScript
     })
     .parse();
 
-transformIgnore(namedArgv);
-
-const { root, ignore, delay } = namedArgv;
-export default { root, ignore, delay, script };
+export default { options: await transformConfig(config, ignore), delay, script };

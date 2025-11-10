@@ -31,7 +31,7 @@ export default async function(extname, content) {
         case ".css": return pcssproc.process(content).async().then(({ css }) => css);
         case ".svg": return optimize(content, { multipass: true }).data;
         case ".html": return minifyHTML(content);
-        case ".js": return minify_js(content).then(({ code }) => code);
+        case ".js": return minify_js(content, { module: true }).then(({ code }) => code);
     }
     return content; // Default: no minification
 }

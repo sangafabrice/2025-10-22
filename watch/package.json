@@ -5,7 +5,9 @@
   "type": "module",
   "bin": "index.js",
   "exports": {
-    "./minify": "./minify/index.js"
+    ".": "./onrestart.js",
+    "./minify": "./minify/index.js",
+    "./restart": "./utils/default_restart_cb.js"
   },
   "scripts": {},
   "keywords": [],
@@ -13,7 +15,7 @@
   "license": "ISC",
   "description": "Native fswatch-based watcher",
   "devDependencies": {
-    "nodemon": "^3.1.10",
     "yargs": "^18.0.0"
-  }
+  },
+  "workspaces": [ "minify", "rollup-plugin" ]
 }

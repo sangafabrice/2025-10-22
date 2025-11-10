@@ -2,6 +2,8 @@ import defaultOnComplete from "./utils/default_oncomplete_cb.js";
 import { pathToFileURL } from "url";
 import { resolve } from "path";
 
+const DEFAULT_SCRIPT = "watch/restart";
+
 /**
  * Module Runner Class
  * Loads a script using dynamic import.
@@ -14,8 +16,8 @@ export default Object.freeze(new class {
      * @param {string} pathLike - Path to the root script file.
      */
     async setScript(pathLike) {
-        this.#script = pathLike;
-        this.#modulefn = (await import(pathToFileURL(resolve(pathLike)))).default;
+        this.#script = pathLike ?? DEFAULT_SCRIPT;
+        this.#modulefn = (await import(pathLike ? pathToFileURL(resolve(pathLike)) : DEFAULT_SCRIPT)).default;
     }
 
     /**

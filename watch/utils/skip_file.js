@@ -10,7 +10,7 @@ const cache = new Map;
  * @returns {Promise<boolean>} Resolves `true` if the file has not changed or
  * if minification failed; otherwise `false`.
  */
-async function isCached(filename) {
+export async function isCached(filename) {
     filename = resolve(filename);
     const content = await minify(extname(filename), fs.readFileSync(filename, { encoding: "utf8" }))
         .catch(error => {

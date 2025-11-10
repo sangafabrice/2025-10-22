@@ -1,9 +1,7 @@
+import minifyTemplate from "rollup-plugin-minify-template";
 import terser from "@rollup/plugin-terser";
 import { string } from "rollup-plugin-string";
 import { globSync } from "fs";
-import { resolve } from "path";
-
-process.chdir(resolve(import.meta.dirname + "/.."));
 
 export default globSync("src/*.js").map(
 	function (input) {
@@ -17,7 +15,10 @@ export default globSync("src/*.js").map(
 					plugins: [terser()]
 				}
 			],
-			plugins: [string({ include: "src/**/assets/**/*.*" })]
+			plugins: [
+				minifyTemplate(),
+				string({ include: "src/**/assets/**/*.*" })
+			]
 		};
 	}
 );

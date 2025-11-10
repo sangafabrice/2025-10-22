@@ -1,17 +1,16 @@
 {
-  "name": "build",
+  "name": "rollup-plugin-minify-template",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "bin": "index.js",
+  "description": "Inline minifier for rollup bundler",
+  "main": "minify-template.js",
   "scripts": {},
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",
-  "description": "Build command-line approach",
+  "type": "module",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
-    "rollup": "^4.50.0",
+    "rollup": "^4.53.3",
     "rollup-plugin-string": "^3.0.0"
   }
 }

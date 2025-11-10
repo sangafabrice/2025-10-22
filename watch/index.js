@@ -8,5 +8,6 @@
  */
 import cliargs from "./parse.js";
 import watcher from "./onrestart.js";
+import stdin from "./stdin.js";
 
-watcher.config(cliargs).onrestart(cliargs.script);
+stdin("rs", watcher.config(cliargs).onrestart(cliargs.script).restart(true));

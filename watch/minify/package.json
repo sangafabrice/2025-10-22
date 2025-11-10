@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {},
   "keywords": [],
-  "author": "",
+  "author": "Fabrice Sanga",
   "license": "ISC",
   "type": "module",
   "devDependencies": {

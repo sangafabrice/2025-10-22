@@ -4,13 +4,13 @@
  * - Converts "foo" → "**\foo"
  * - If pattern ends with `/` or `\`, treat it as a directory:
  *   "dir/" → "**\dir\**\*"
- * @param {{ root: string|string[], ignore: string[]}} namedArgv
+ * @param {string[]} ignore
  * A list of raw ignore patterns to normalize. Will be mutated.
  */
-export default function(namedArgv) {
+export default function(ignore) {
     const ignoreList = [], includeList = [];
     
-    namedArgv.ignore.forEach((pattern) => {
+    ignore.forEach((pattern) => {
         const not = pattern.startsWith("!");
         not && (pattern = pattern.slice(1));
         pattern = "**/"
@@ -20,8 +20,5 @@ export default function(namedArgv) {
         list.push(pattern);
     });
 
-    namedArgv.ignore = ignoreList;
-
-    const root = includeList.map(pattern => namedArgv.root + "/" + pattern);
-    root.length && (namedArgv.root = root);
+    return { exclude: ignoreList, include: includeList };
 }

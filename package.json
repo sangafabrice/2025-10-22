@@ -4,11 +4,12 @@
   "main": "src/fttl-yt-player.js",
   "type": "module",
   "scripts": {
-    "watch": "watch --root src --ignore bin/ \"!**/*.{css,html}\" build"
+    "build": "rollup --config",
+    "watch": "watch --ignore bin/"
   },
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",
   "description": "YouTube play on hover web component",
-  "workspaces": [ "build", "watch", "watch/minify" ]
+  "workspaces": [ "build", "watch", "watch/minify", "watch/rollup-plugin" ]
 }

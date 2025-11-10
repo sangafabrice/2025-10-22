@@ -3,7 +3,7 @@ import "../../fttl-progress-bar.js";
 import ytIFrame from "../ytIFrame/ytIFrame.js";
 import ShadowDOMMap from "../../utils/domMap.util.js";
 import parseHTML from "../../utils/parseHTML.util.js";
-import shadowDOMHtml from "./assets/bin/template.min.html";
+import shadowDOMHtml from "./assets/template.html";
 import volumeTitleSvg from "./assets/volume-title.svg";
 import volumeMuteSvg from "./assets/volume-mute.svg";
 import volumeUpSvg from "./assets/volume-up.svg";

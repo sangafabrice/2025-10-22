@@ -7,11 +7,6 @@
  * while watching files according to the given patterns.
  */
 import cliargs from "./parse.js";
-import execCommand from "./exec.js";
-import nodemon from "nodemon";
+import watcher from "./onrestart.js";
 
-const { root: watch, ignore, script } = cliargs;
-
-nodemon({ watch, ignore })
-.on("restart", execCommand.bind(null, script))
-.restart();
+watcher.config(cliargs).onrestart(cliargs.script);

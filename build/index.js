@@ -12,7 +12,7 @@ function getRelative(pathLike) {
 }
 
 minifyTemplates(
-    [env.FILENAME ?? (await import("./all_templates.js")).default.files].flat(),
+    [(f => { if(f) return JSON.parse(f) })(env.FILENAME) ?? (await import("./all_templates.js")).default.files].flat(),
     { excludeExt: [ "js", "svg" ] }
 )
 .then(out => out.forEach(({ input, output }) => console.info(getRelative(input), "→", getRelative(output))))

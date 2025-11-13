@@ -9,7 +9,7 @@ import { fork } from "child_process";
  */
 export default function execCommand(script, filenames) {
     const env = {};
-    if (filenames) env.FILENAME = filenames[0];
+    if (filenames) env.FILENAME = JSON.stringify(filenames);
     fork(script, { stdio: "inherit", env })
     .on("exit", () => console.info(`Completed running '${script}'. Waiting for file changes before restarting...\n`));
 }

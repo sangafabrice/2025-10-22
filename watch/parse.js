@@ -6,72 +6,55 @@
  * --delay=<milliseconds> => time delay before triggering restart
  * <script>               => the script to execute
  */
-import path, { relative, matchesGlob, resolve } from "path";
-import fs from "fs";
-import { pathToFileURL } from "url";
+import parseScript from "./utils/parse_script.js";
+import parseFlags from "./utils/parse_flags.js";
+import transformIgnore from "./utils/transform_ignore.js";
+import { relative } from "path";
+
+/**
+ * @typedef {Object} StartupObject
+ * @property {string[]} [files]  Initial files used as cache warm-up.
+ */
+
+/**
+ * @typedef {(files: string[]) => any} ScriptCallback
+ * A function executed on each restart. May be async or sync.
+ */
+
+/**
+ * @typedef {Object} ParsedScript
+ * @property {ScriptCallback & { path: string }} script
+ * The loaded script function, extended with a `.path` property.
+ * @property {StartupObject} startup
+ * Optional startup configuration exported by the script module.
+ */
+
+/**
+ * @typedef {Object} NamedArgv
+ * @property {string} root Root directory to watch
+ * @property {string[]} ignore Array of ignore patterns (glob-like)
+ * @property {number} delay Debounce delay in ms
+ * @property {ScriptCallback & { path: string }} script
+ * @property {StartupObject} startup
+ */
 
 const cliargs = process.argv.slice(2);
 
+// Base settings before flag parsing.
 const namedArgv = {
     root: ".",
-    ignoreList: [],
+    ignore: [],
     delay: 500,
-    /**
-     * Resolves a script path, normalizes extensions and directories, and imports it.
-     * @type {{script: ((files: string[]) => any) & ({path: string}), startup: { files: string[] }}}
-     */
-    ...await (async (scriptPath)  => {
-        scriptPath =
-            fs.existsSync(scriptPath) && fs.statSync(scriptPath).isDirectory()
-                ? scriptPath.concat("/index.js")
-                : matchesGlob(scriptPath, "**/*.js")
-                    ? scriptPath : scriptPath.concat(".js");
-        return import(pathToFileURL(resolve(scriptPath)).href)
-            .then(({ default: script, startup }) => (
-                {
-                    script: Object.assign(script, { path: relative(".", scriptPath) }),
-                    startup: startup ?? {}
-                }
-            ));
-    })(cliargs.pop())
+    ...await parseScript(cliargs.pop())
 }
-const ROOT_PATTERN = /^--root=/i;
-const IGNORE_PATTERN = /^--ignore=/i;
-const DELAY_PATTERN = /^--delay=/i;
 
-// Iterate over remaining arguments to populate namedArgv
-cliargs.forEach(
-    arg => 
-        ROOT_PATTERN.test(arg)
-            ? (namedArgv.root = arg.replace(ROOT_PATTERN, ""))
-            : IGNORE_PATTERN.test(arg)
-                ? namedArgv.ignoreList.push(arg.replace(IGNORE_PATTERN, ""))
-                : DELAY_PATTERN.test(arg)
-                    ? (namedArgv.delay = Number(arg.replace(DELAY_PATTERN, "")))
-                    : null
-);
+// Parse flags (--root, --ignore, --delay)
+parseFlags(cliargs, namedArgv)
 
-// Convert root to a relative path
+// Normalize root to a relative path
 namedArgv.root = relative(".", namedArgv.root);
 
-// Convert ignore patterns into glob-compatible patterns
-namedArgv.ignoreList.forEach((pattern, index, $this) => {
-    const not = pattern.startsWith("!");
-    not && (pattern = pattern.slice(1));
-    $this[index] = (not ? "!":"") + "**/"
-        .concat(pattern, /[\/\\]$/i.test(pattern) ? "**/*" : "")
-        .replace(/^\*\*\/\*\*/, "**");
-});
-
-/**
- * Helper method added directly onto ignoreList array.
- * Tests whether a filename matches ANY ignore glob pattern.
- */
-namedArgv.ignoreList.test = function (filename) {
-    const matchesGlob = path.matchesGlob.bind(path, filename);
-    return this.some(pattern => pattern.startsWith("!")
-        ? !matchesGlob(pattern.slice(1))
-        : matchesGlob(pattern));
-}
+// Transform ignore patterns into glob-compatible ones & add ignore.test()
+transformIgnore(namedArgv.ignore);
 
 export default namedArgv;

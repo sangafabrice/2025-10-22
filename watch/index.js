@@ -7,6 +7,6 @@
  * while watching files according to the given patterns.
  */
 import cliargs from "./parse.js";
-import onrestart from "./onrestart.js";
+import watcher from "./onrestart.js";
 
-onrestart(cliargs);
+watcher.config(cliargs).onrestart(cliargs.script);

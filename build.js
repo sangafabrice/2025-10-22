@@ -1,1 +1,1 @@
-require("child_process").exec("npx rollup --config");
+(await import("child_process")).exec("npx rollup --config");

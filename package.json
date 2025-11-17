@@ -2,6 +2,7 @@
   "name": "fttl-progress-bar",
   "version": "1.0.0",
   "main": "src/fttl-progress-bar.js",
+  "type": "module",
   "scripts": {
     "build": "node build",
     "build:js": "rollup --config",

@@ -1,6 +1,6 @@
 import terser from "@rollup/plugin-terser";
 import { string } from "rollup-plugin-string";
-import app from "./package.json" with { type: "json" };
+import app from "../package.json" with { type: "json" };
 
 const outputNoExt = `dist/${app.name}`; 
 const format = "umd";

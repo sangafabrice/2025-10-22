@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node build",
-    "build:js": "rollup --config",
-    "build:css": "cd src/templates/assets&& postcss *.css --dir bin --ext min.css",
+    "build:js": "rollup --config build/rollup.config.js",
+    "build:css": "cd src/templates/assets&& postcss *.css --dir bin --ext min.css --config ../../../build",
     "watch": "node watch --root=src --ignore=bin/ build"
   },
   "keywords": [],

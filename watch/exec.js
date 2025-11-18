@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { fork } from "child_process";
 
 /**
  * Execute the target script using your project's "npm run node" command.
@@ -8,8 +8,6 @@ import { execSync } from "child_process";
  * @param {string} [filename] - Optional filename passed to the script.
  */
 export default function execCommand(script, filename) {
-    try {
-        execSync(`npm run node -- "${script}"  ${filename?.replace(/^(.)/, '"$1').concat('"') ?? ""}`, { stdio: "inherit" });
-    } catch (error) { }
-    console.info(`Completed running '${script}'. Waiting for file changes before restarting...\n`);
+    fork(script, [ filename ], { stdio: "inherit" })
+    .on("exit", () => console.info(`Completed running '${script}'. Waiting for file changes before restarting...\n`))
 }

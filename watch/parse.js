@@ -18,17 +18,21 @@ const namedArgv = {
     delay: 500,
     /**
      * Resolves a script path, normalizes extensions and directories, and imports it.
-     * @type {((files: string[]) => any) & ({path: string})} The imported module's default export, patched with:
-     *   - {string} path   Script path relative to project root
+     * @type {{script: ((files: string[]) => any) & ({path: string}), startup: { files: string[] }}}
      */
-    script: await (async (scriptPath)  => {
+    ...await (async (scriptPath)  => {
         scriptPath =
             fs.existsSync(scriptPath) && fs.statSync(scriptPath).isDirectory()
                 ? scriptPath.concat("/index.js")
                 : matchesGlob(scriptPath, "**/*.js")
                     ? scriptPath : scriptPath.concat(".js");
         return import(pathToFileURL(resolve(scriptPath)).href)
-            .then(({ default: script }) => Object.assign(script, { path: relative(".", scriptPath) }));
+            .then(({ default: script, startup }) => (
+                {
+                    script: Object.assign(script, { path: relative(".", scriptPath) }),
+                    startup: startup ?? {}
+                }
+            ));
     })(cliargs.pop())
 }
 const ROOT_PATTERN = /^--root=/i;

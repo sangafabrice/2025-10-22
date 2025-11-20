@@ -1,6 +1,5 @@
 import minify from "@wc-build/minify";
-import execCommand from "./exec.js";
-import { extname, sep } from "path";
+import { extname, resolve, sep } from "path";
 import { watch } from "fs/promises";
 import fs from "fs";
 
@@ -16,6 +15,7 @@ const cache = new Map;
  * @returns {Promise<boolean>} `true` if unchanged or unreadable, otherwise `false`
  */
 async function isCached(filename) {
+    filename = resolve(filename);
     const content = await minify(extname(filename), fs.readFileSync(filename, { encoding: "utf8" }))
         .catch(error => {
             console.error(error);
@@ -64,13 +64,30 @@ async function shouldSkip(eventType, filename) {
 }
 
 /**
+ * Get list of initial files to prime cache or use startup override.
+ * @param {string} root
+ * @param {string[] & { test: function(string): boolean }} ignoreList
+ * @return {Set<string>} set of statup files
+ */
+function getStartupFiles(root, ignoreList, startupFiles) {
+    startupFiles = (
+        startupFiles
+        ?? fs.globSync(`${root}/**/*`, { exclude: ignoreList })
+    ).filter(isFile);
+    startupFiles.forEach(isCached);
+    return new Set(startupFiles);
+}
+
+/**
  * Return the list of changed files and reset the tracking set.
  * On startup, returns `undefined` to signal an initial run.
  * @param {Set<string>} files
+ * @param {{ startup: boolean }} runObj
  * @returns {string[]|undefined}
  */
-function emitChangedFiles(files) {
+function emitChangedFiles(files, runObj) {
     const changedFiles = [...files];
+    runObj.startup = false;
     files.clear();
     return changedFiles;
 }
@@ -94,16 +111,16 @@ async function trackFiles(root, ignoreList, files) {
  * @param {string} root
  * @param {string[] & { test: function(string): boolean }} ignoreList
  * @param {number} delay - Delay in milliseconds for batching file events
+ * @param {Set<string>} files - set of statup files
  * @yields {Promise<string[]|undefined>} Promise resolving to list of changed files
  */
-async function* registerWatch(root, ignoreList, delay) {
-    const files = new Set;
+async function* registerWatch(root, ignoreList, delay, files) {
     const sleep = delay => new Promise(r => setTimeout(r, delay));
+    let runObj = { startup: true };
     trackFiles(root, ignoreList, files);
-    yield undefined;
     while (true) {
-        if (files.size) yield sleep(delay)
-            .then(() => emitChangedFiles(files));
+        if (files.size) yield sleep(runObj.startup ? 0 : delay)
+            .then(() => emitChangedFiles(files, runObj));
         await sleep(0);
     }
 }
@@ -111,9 +128,15 @@ async function* registerWatch(root, ignoreList, delay) {
 /**
  * Main watcher reaction handler.
  * Executes the script whenever file changes are detected.
- * @param {{ root: string, ignoreList: string[], script: string, delay: number }} options
+ * @param {{ root: string, ignoreList: string[], script: string, delay: number,  startup: { files: string[] }}} options
  */
-export default async function onrestart({root, ignoreList, script, delay}) {
-    for await (const files of registerWatch(root, ignoreList, delay))
-        await execCommand(script, files);
+export default async function onrestart({root, ignoreList, script, delay, startup: { files: startupFiles }}) {
+    for await (const files of registerWatch(root, ignoreList, delay, getStartupFiles(root, ignoreList, startupFiles)))
+        try {
+            await script(files);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            console.info(`Completed running '${script.path}'. Waiting for file changes before restarting...\n`);
+        }
 }

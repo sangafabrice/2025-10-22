@@ -11,11 +11,6 @@
   "description": "Build command-line approach",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
-    "cssnano": "^7.1.1",
-    "html-minifier-terser": "^7.2.0",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "postcss-preset-env": "^10.4.0",
     "rollup": "^4.50.0",
     "rollup-plugin-string": "^3.0.0"
   }

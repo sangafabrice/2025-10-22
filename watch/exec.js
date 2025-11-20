@@ -1,13 +1,17 @@
-import { fork } from "child_process";
-
 /**
- * Execute the target script using your project's "npm run node" command.
- * The optional {@link filenames} argument is passed through to the script,
- * quoted safely if present.  
- * @param {string} script - Path to the script that should be executed.
- * @param {string[]} [filenames] - Optional filenames passed to the script.
+ * Execute the provided script function with the list of changed filenames.
+ * Ensures errors are logged and always prints a completion message.
+ * @param {(files: string[]|undefined) => Promise<any>} script
+ * A function to execute. Must expose a `.path` property for logging.
+ * @param {string[]|undefined} filenames
+ * The list of changed files (or `undefined` on initial startup).
  */
-export default function execCommand(script, filenames = []) {
-    fork(script, filenames, { stdio: "inherit" })
-    .on("exit", () => console.info(`Completed running '${script}'. Waiting for file changes before restarting...\n`));
+export default async function execCommand(script, filenames) {
+    try {
+        await script(filenames);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        console.info(`Completed running '${script.path}'. Waiting for file changes before restarting...\n`);
+    }
 }

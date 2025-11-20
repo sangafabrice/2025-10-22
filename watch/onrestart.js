@@ -1,5 +1,6 @@
+import minify from "@wc-build/minify";
 import execCommand from "./exec.js";
-import { sep } from "path";
+import { extname, sep } from "path";
 import { watch } from "fs/promises";
 import fs from "fs";
 
@@ -8,12 +9,19 @@ import fs from "fs";
 const cache = new Map;
 
 /**
- * Determine whether the file content is unchanged since the last read.
- * Used to ignore duplicate editor events (common in VSCode, JetBrains, etc.)
+ * Determine whether the minified file content is unchanged since the last read.
+ * Uses content hashing via minification to normalize formatting differences and
+ * avoid duplicate editor-triggered events.
+ * @param {string} filename
+ * @returns {Promise<boolean>} `true` if unchanged or unreadable, otherwise `false`
  */
-function isCached(filename) {
-    let content;
-    if (cache.get(filename) == (content = fs.readFileSync(filename, { encoding: "utf8" }))) return true;
+async function isCached(filename) {
+    const content = await minify(extname(filename), fs.readFileSync(filename, { encoding: "utf8" }))
+        .catch(error => {
+            console.error(error);
+            return undefined;
+        });
+    if (!content || cache.get(filename) == content) return true;
     cache.set(filename, content);
     return false;
 }
@@ -33,12 +41,11 @@ function isFile(filename) {
  * – whether its content was actually changed (cache check)
  * @param {string} filename - Filename relative to the root
  * @param {string} root - Base directory being watched
- * @param {string & { test: function(string): boolean }} ignoreList - Ignore pattern list with a `.test()` helper
- * @returns {boolean} true if the file should be skipped
+ * @param {string[] & { test: function(string): boolean }} ignoreList - Ignore pattern list with a `.test()` helper
+ * @returns {Promise<boolean>} `true` if the file should be skipped
  */
-function shouldSkipFile(filename, root, ignoreList) {
-    filename = root.concat(sep).concat(filename);
-    return ignoreList.test(filename) || !isFile(filename) || isCached(filename)
+async function shouldSkipFile(filename, root, ignoreList) {
+    return ignoreList.test(filename) || !isFile(filename) || await isCached(filename)
 }
 
 /**
@@ -50,10 +57,10 @@ function shouldSkipFile(filename, root, ignoreList) {
  * This function is a passthrough that forwards its parameters
  * (except for `eventType`) directly to {@link shouldSkipFile}.
  * @param {"change"|"rename"} eventType
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
-function shouldSkip(eventType, filename) {
-    return filename && (eventType != "change" || shouldSkipFile(...[...arguments].slice(1)));
+async function shouldSkip(eventType, filename) {
+    return filename && (eventType != "change" || await shouldSkipFile(...[...arguments].slice(1)));
 }
 
 /**
@@ -71,12 +78,12 @@ function emitChangedFiles(files) {
 /**
  * Track file changes asynchronously and populate the provided Set.
  * @param {string} root - Directory to watch (recursive)
- * @param {{ test: function(string): boolean }} ignoreList
+ * @param {string[] & { test: function(string): boolean }} ignoreList
  * @param {Set<string>} files - Accumulates changed filenames
  */
 async function trackFiles(root, ignoreList, files) {
-    for await (const { eventType, filename } of watch(root, { recursive: true })) {
-        if (shouldSkip(eventType, filename, root, ignoreList)) continue;
+    for await (let { eventType, filename } of watch(root, { recursive: true })) {
+        if (await shouldSkip(eventType, (filename = filename?.replace(/^/i, root.concat(sep))), root, ignoreList)) continue;
         files.add(filename);
     }
 }
@@ -85,7 +92,7 @@ async function trackFiles(root, ignoreList, files) {
  * Asynchronous generator that yields batches of changed files.
  * Debounces events using the provided delay.
  * @param {string} root
- * @param {{ test: function(string): boolean }} ignoreList
+ * @param {string[] & { test: function(string): boolean }} ignoreList
  * @param {number} delay - Delay in milliseconds for batching file events
  * @yields {Promise<string[]|undefined>} Promise resolving to list of changed files
  */
@@ -108,5 +115,5 @@ async function* registerWatch(root, ignoreList, delay) {
  */
 export default async function onrestart({root, ignoreList, script, delay}) {
     for await (const files of registerWatch(root, ignoreList, delay))
-        execCommand(script, files);
+        await execCommand(script, files);
 }

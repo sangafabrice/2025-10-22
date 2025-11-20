@@ -6,7 +6,9 @@
  * --delay=<milliseconds> => time delay before triggering restart
  * <script>               => the script to execute
  */
-import path, { relative } from "path";
+import path, { relative, matchesGlob, resolve } from "path";
+import fs from "fs";
+import { pathToFileURL } from "url";
 
 const cliargs = process.argv.slice(2);
 
@@ -14,7 +16,20 @@ const namedArgv = {
     root: ".",
     ignoreList: [],
     delay: 500,
-    script: relative(".", cliargs.pop())
+    /**
+     * Resolves a script path, normalizes extensions and directories, and imports it.
+     * @type {((files: string[]) => any) & ({path: string})} The imported module's default export, patched with:
+     *   - {string} path   Script path relative to project root
+     */
+    script: await (async (scriptPath)  => {
+        scriptPath =
+            fs.existsSync(scriptPath) && fs.statSync(scriptPath).isDirectory()
+                ? scriptPath.concat("/index.js")
+                : matchesGlob(scriptPath, "**/*.js")
+                    ? scriptPath : scriptPath.concat(".js");
+        return import(pathToFileURL(resolve(scriptPath)).href)
+            .then(({ default: script }) => Object.assign(script, { path: relative(".", scriptPath) }));
+    })(cliargs.pop())
 }
 const ROOT_PATTERN = /^--root=/i;
 const IGNORE_PATTERN = /^--ignore=/i;

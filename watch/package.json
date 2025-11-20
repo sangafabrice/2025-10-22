@@ -10,5 +10,6 @@
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",
-  "description": "Native fswatch-based watcher"
+  "description": "Native fswatch-based watcher",
+  "workspaces": [ "minify/" ]
 }

@@ -1,6 +1,10 @@
 import terser from "@rollup/plugin-terser";
 import { string } from "rollup-plugin-string";
 import app from "../package.json" with { type: "json" };
+import { chdir } from "process";
+import { resolve } from "path";
+
+chdir(resolve(import.meta.dirname + "/.."));
 
 const outputNoExt = `dist/${app.name}`; 
 

@@ -4,9 +4,7 @@
   "main": "index.js",
   "type": "module",
   "bin": "index.js",
-  "scripts": {
-    "build": "rollup --config"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",

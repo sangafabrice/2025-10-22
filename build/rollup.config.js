@@ -1,4 +1,3 @@
-import "./index.js";
 import terser from "@rollup/plugin-terser";
 import { string } from "rollup-plugin-string";
 import app from "../package.json" with { type: "json" };

@@ -4,11 +4,12 @@
   "main": "src/fttl-yt-player.js",
   "type": "module",
   "scripts": {
-    "watch": "npm run build --workspaces --if-present && nodemon"
+    "build": "build",
+    "watch": "build && nodemon"
   },
   "nodemonConfig": {
     "events": {
-      "restart": "npm run build --workspace=build"
+      "restart": "npx build"
     },
     "exec": "node -e \"\"",
     "ext": "*",

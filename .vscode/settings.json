@@ -2,7 +2,16 @@
     "json.schemas": [
         {
             "fileMatch": [ "/.htmlhintrc" ],
-            "url": "https://www.schemastore.org/htmlhint.json"
+            "url": "./.vscode/htmlhint.schema.json"
+        },
+        {
+            "fileMatch": [ "/nodemon.json" ],
+            "url": "./.vscode/nodemon.schema.json"
+        },
+        {
+            "fileMatch": [ "/package.json" ],
+            "url": "./.vscode/package.schema.json"
         }
-    ]
+    ],
+    "json.schemaDownload.enable": false
 }

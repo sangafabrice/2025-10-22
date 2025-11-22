@@ -3,4 +3,4 @@
 **/bin
 *.min.*
 package-lock.json
-htmlhint.json
+*.schema.json

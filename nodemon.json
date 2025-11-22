@@ -1,0 +1,6 @@
+{
+    "exec": [ "npm", "run", "build", "--workspaces" ],
+    "ext": "*",
+    "ignore": [ "*.min.*" ],
+    "watch": [ "src" ]
+}

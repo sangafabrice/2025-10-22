@@ -4,12 +4,12 @@
  * ignore patterns, and a target script, then executes the target script 
  * while watching files according to the given patterns.
  */
-import { execSync } from "child_process";
+import { fork } from "child_process";
 import { relative } from "path";
 import fs from "fs";
 
 const { root, ignoreList, script } = parseArgv(process.argv.slice(2));
-execSync(`node ${writeWatchPathArgv(root, ignoreList)} "${script}"`, { stdio: "inherit" });
+fork(script, { execArgv: writeWatchPathArgv(root, ignoreList) });
 
 /**
  * Parse the command-line arguments to extract named parameters:
@@ -54,6 +54,6 @@ function writeWatchPathArgv(root, ignoreList) {
     // Append glob pattern for recursive matching to root directory
     return fs.globSync(root.concat("/**/*"), { exclude: ignoreList })
         .filter(file => fs.statSync(file).isFile() && !fs.statSync(file).isSymbolicLink())
-        .map(file => '--watch-path="'.concat(file).concat('"'))
-        .join(" ");
+        .map(file => [ "--watch-path", file ])
+        .concat("--watch-preserve-output").flat();
 }

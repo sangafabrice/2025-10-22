@@ -9,7 +9,7 @@ import { relative } from "path";
 import fs from "fs";
 
 const { root, ignoreList, script } = parseArgv(process.argv.slice(2));
-fork(script, { execArgv: writeWatchPathArgv(root, ignoreList) });
+listWatchPathArgv(root, ignoreList).forEach(({ "0": execArgv, "1": ext }) => fork(script, [ext], { execArgv }));
 
 /**
  * Parse the command-line arguments to extract named parameters:
@@ -50,10 +50,18 @@ function parseArgv(argv) {
  * @param {string[]} ignoreList - Glob patterns to exclude from watching
  * @returns {string} Concatenated --watch-path arguments for each file
  */
-function writeWatchPathArgv(root, ignoreList) {
+function listWatchPathArgv(root, ignoreList) {
+    const cssfiles = [], jsfiles = [];
+    const watchArgv = [[cssfiles, ".css"], [jsfiles, ".js"]];
     // Append glob pattern for recursive matching to root directory
-    return fs.globSync(root.concat("/**/*"), { exclude: ignoreList })
+    fs.globSync(root.concat("/**/*"), { exclude: ignoreList })
         .filter(file => fs.statSync(file).isFile() && !fs.statSync(file).isSymbolicLink())
-        .map(file => [ "--watch-path", file ])
-        .concat("--watch-preserve-output").flat();
+        .forEach(file => {
+            watchArgv
+            .forEach(({ "0": aggfiles, "1": ext }) => {
+                if (file.endsWith(ext)) aggfiles.push("--watch-path", file);
+            })
+        });
+    watchArgv.forEach(({ "0": aggfiles }) => aggfiles.push("--watch-preserve-output"));
+    return watchArgv;
 }

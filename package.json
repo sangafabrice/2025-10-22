@@ -5,23 +5,15 @@
   "type": "module",
   "scripts": {
     "build": "build",
-    "watch": "build && nodemon"
+    "watch": "watch --root=src --ignore=bin/ build"
   },
   "nodemonConfig": {
-    "events": {
-      "restart": "npx build"
-    },
     "exec": "node -e \"\"",
-    "ext": "*",
-    "ignore": "bin/",
-    "watch": "src"
+    "ext": "*"
   },
   "keywords": [],
   "author": "Fabrice Sanga",
   "license": "ISC",
   "description": "YouTube play on hover web component",
-  "workspaces": [ "build/", "minify/" ],
-  "devDependencies": {
-    "nodemon": "^3.1.10"
-  }
+  "workspaces": [ "build/", "minify/", "watch/" ]
 }

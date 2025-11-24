@@ -2,18 +2,19 @@
 
 import bundleJS from "./bundle.js";
 import minifyTemplates from "./minify_templates.js";
+import startup from "./all_templates.js";
 import { relative, resolve } from "path";
-import { chdir, env } from "process";
 
-chdir(resolve(import.meta.dirname + "/.."));
+process.chdir(resolve(import.meta.dirname + "/.."));
 
 function getRelative(pathLike) {
     return relative(resolve("."), pathLike);
 }
 
-minifyTemplates(
-    [(f => { if(f) return JSON.parse(f) })(env.FILENAME) ?? (await import("./all_templates.js")).default.files].flat(),
-    { excludeExt: [ "js", "svg" ] }
-)
-.then(out => out.forEach(({ input, output }) => console.info(getRelative(input), "→", getRelative(output))))
-.then(bundleJS);
+export default function build(files = startup.files) {
+    return minifyTemplates(files, { excludeExt: [ "js", "svg" ] })
+    .then(out => out.forEach(({ input, output }) => console.info(getRelative(input), "→", getRelative(output))))
+    .then(bundleJS);
+}
+
+if (import.meta.main) build();

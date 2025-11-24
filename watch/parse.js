@@ -6,6 +6,7 @@
  * --delay=<milliseconds> => time delay before triggering restart
  * <script>               => the script to execute
  */
+import parseScript from "./utils/parse_script.js";
 import parseFlags from "./utils/parse_flags.js";
 import transformIgnore from "./utils/transform_ignore.js";
 import { relative } from "path";
@@ -25,7 +26,7 @@ const namedArgv = {
     root: ".",
     ignore: [],
     delay: 500,
-    script: cliargs.pop()
+    script: parseScript(cliargs.pop())
 }
 
 // Parse flags (--root, --ignore, --delay)

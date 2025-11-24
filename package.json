@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "build",
-    "watch": "watch --root=src --ignore=bin/ build"
+    "watch": "watch --root=src --ignore=bin/ --delay=10000 build"
   },
   "nodemonConfig": {
     "exec": "node -e \"\"",

@@ -23,8 +23,10 @@ export default Object.freeze(new class {
      * @param {string} script
      */
     async onrestart(script) {
+        await execCommand.setScript(script);
+        const loggers = [...arguments].slice(1);
         for await (const files of this.#watch())
-            execCommand(script, files);
+            await execCommand.do(files, ...loggers);
     }
 
     /** @type {Set<string>} */ #files = new Set;

@@ -18,17 +18,19 @@ async function importModuleDynamically(specifier) {
 
 /**
  * Initializes custom fields on an `import.meta`.
+ * @param {string[] | undefined} filenames - Optional list of changed filenames.
  * @param {object} meta - The import meta object to extend.
  * @param {string} meta.dirname - Injected by this function. Directory of the current module file.
  * @param {string} meta.filename - Injected by this function. Absolute path to the module file.
  * @param {string} meta.url - Injected by this function. File URL pointing to the current module.
  * @param {function(string): string} meta.resolve - A bound version of `import.meta.resolve`
  */
-function initializeImportMeta(meta) {
+function initialize_import_meta(filenames, meta) {
     meta.dirname = scriptdir;
     meta.filename = scriptfullname;
     meta.url = pathToFileURL(scriptfullname).href;
     meta.resolve = import.meta.resolve.bind(meta);
+    meta.files = filenames;
 }
 
 /**
@@ -36,7 +38,7 @@ function initializeImportMeta(meta) {
  * @param {SourceTextModule} module - Module whose dependencies will be resolved.
  * @param {Map<string, SourceTextModule>} [moduleMap] - Cache mapping specifiers to module instances.
  */
-function linkResolveDependencies(context, module, moduleMap) {
+function linkResolveDependencies(module, moduleMap) {
     moduleMap = moduleMap ?? new Map;
     // Link each import request from the module
     module.linkRequests(module.moduleRequests.map(request => {
@@ -48,11 +50,11 @@ function linkResolveDependencies(context, module, moduleMap) {
                 // Wrap import so namespace.default works correctly
                 `const imp = await import("${specifier}");` +
                 "export default imp?.default ?? imp;",
-                { context, importModuleDynamically }
+                { importModuleDynamically }
             );
             moduleMap.set(specifier, requestedModule);
             // Recursively process dependencies
-            linkResolveDependencies(context, requestedModule, moduleMap);
+            linkResolveDependencies(requestedModule, moduleMap);
         }
         return requestedModule;
     }));
@@ -81,12 +83,12 @@ export default Object.freeze(new class {
      * @param {string[] | undefined} filenames - Optional list of changed filenames.
      */
     do(filenames) {
-        const context = createContext({ filenames, process, console });
+        const initializeImportMeta = initialize_import_meta.bind(null, filenames);
         const build = new SourceTextModule(
             readFileSync(scriptname, { encoding: "utf8" }),
-            { context, importModuleDynamically, initializeImportMeta }
+            { importModuleDynamically, initializeImportMeta }
         );
-        linkResolveDependencies(context, build);
+        linkResolveDependencies(build);
         build.instantiate();
         build.evaluate()
         .then(() => console.info(`Completed running '${scriptname}'. Waiting for file changes before restarting...\n`));

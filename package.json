@@ -1,0 +1,20 @@
+{
+  "name": "fttl-yt-player",
+  "version": "1.0.0",
+  "main": "src/fttl-yt-player.js",
+  "type": "module",
+  "scripts": {
+    "build": "node build",
+    "watch": "node --experimental-vm-modules watch --root=src --ignore=bin/ build"
+  },
+  "nodemonConfig": {
+    "stdin": false,
+    "exec": "node -e \"\"",
+    "ext": "*"
+  },
+  "keywords": [],
+  "author": "Fabrice Sanga",
+  "license": "ISC",
+  "description": "YouTube play on hover web component",
+  "workspaces": [ "build/", "minify/", "watch/" ]
+}

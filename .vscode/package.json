@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "dl": "curl --config dl.json-schema.conf"
+  }
+}

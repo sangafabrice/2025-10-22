@@ -1,4 +1,4 @@
-import { SourceTextModule } from "vm";
+import { SourceTextModule, createContext } from "vm";
 import { readFileSync } from "fs";
 import { pathToFileURL } from "url";
 import { dirname, join, resolve } from "path";
@@ -36,7 +36,7 @@ function initializeImportMeta(meta) {
  * @param {SourceTextModule} module - Module whose dependencies will be resolved.
  * @param {Map<string, SourceTextModule>} [moduleMap] - Cache mapping specifiers to module instances.
  */
-function linkResolveDependencies(module, moduleMap) {
+function linkResolveDependencies(context, module, moduleMap) {
     moduleMap = moduleMap ?? new Map;
     // Link each import request from the module
     module.linkRequests(module.moduleRequests.map(request => {
@@ -48,11 +48,11 @@ function linkResolveDependencies(module, moduleMap) {
                 // Wrap import so namespace.default works correctly
                 `const imp = await import("${specifier}");` +
                 "export default imp?.default ?? imp;",
-                { importModuleDynamically }
+                { context, importModuleDynamically }
             );
             moduleMap.set(specifier, requestedModule);
             // Recursively process dependencies
-            linkResolveDependencies(requestedModule, moduleMap);
+            linkResolveDependencies(context, requestedModule, moduleMap);
         }
         return requestedModule;
     }));
@@ -81,14 +81,12 @@ export default Object.freeze(new class {
      * @param {string[] | undefined} filenames - Optional list of changed filenames.
      */
     do(filenames) {
-        const { env } = process;
-        delete env.FILENAME;
-        if (filenames) env.FILENAME = JSON.stringify(filenames);
+        const context = createContext({ filenames, process, console });
         const build = new SourceTextModule(
             readFileSync(scriptname, { encoding: "utf8" }),
-            { importModuleDynamically, initializeImportMeta }
+            { context, importModuleDynamically, initializeImportMeta }
         );
-        linkResolveDependencies(build);
+        linkResolveDependencies(context, build);
         build.instantiate();
         build.evaluate()
         .then(() => console.info(`Completed running '${scriptname}'. Waiting for file changes before restarting...\n`));

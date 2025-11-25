@@ -31,17 +31,20 @@ export default Object.freeze(new class {
 
     /** @type {Set<string>} */ #files = new Set;
     /** @type {number} */ #delay;
+    /** @type {boolean} */ #restart = true;
 
     async #trackFiles() {
-        nodemon.on("restart", async ({ "0": filename }) => {
-            if (await shouldSkip(filename)) return;
+        nodemon.on("restart", async (filename) => {
+            if (!filename) return this.#restart = true;
+            if (await shouldSkip((filename = filename?.[0]))) return;
             this.#files.add(filename);
         });
     }
 
     #emitChangedFiles() {
-        const changedFiles = [...this.#files];
+        const changedFiles = this.#restart ? undefined : [...this.#files];
         this.#files.clear();
+        this.#restart = false;
         return changedFiles;
     }
 
@@ -51,9 +54,9 @@ export default Object.freeze(new class {
      */
     async *#watch() {
         this.#trackFiles();
-        yield undefined;
         while (true) {
-            if (this.#files.size) yield setTimeout(this.#delay)
+            if (this.#restart || this.#files.size)
+                yield setTimeout(this.#restart ? 0 : this.#delay)
                 .then(this.#emitChangedFiles.bind(this));
             await setTimeout();
         }
